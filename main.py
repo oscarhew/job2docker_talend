@@ -11,7 +11,7 @@ folder_to_watch = "C:\\Users\\Oscar\\Desktop\\listener\\zipFile"
 folder_to_convertDocker = "C:\\Users\\Oscar\\Desktop\\listener\\jobsUnzipped"
 
 # Docker Hub username, image name, and tag
-dockerhub_username = "oscarhew"
+dockerhub_username = config('docker_username')
 image_name = "dw_main"
 tag = "latest"  # Replace with the desired tag
 password = config('docker_pw')
