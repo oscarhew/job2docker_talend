@@ -35,19 +35,20 @@ Before using this script, make sure you have the following prerequisites:
     python main.py
 
 ## How It Works
-    The script uses the watchdog library to monitor the folder_to_watch for the creation of ZIP files.
 
-    When a ZIP file is detected, it extracts its contents to the folder_to_convertDocker.
+The script uses the watchdog library to monitor the folder_to_watch for the creation of ZIP files.
 
-    The script then creates a Dockerfile for the extracted job scripts, builds a Docker image, and pushes it to Docker Hub.
+When a ZIP file is detected, it extracts its contents to the folder_to_convertDocker.
 
-    The Docker image is tagged with your specified image_name and tag.
+The script then creates a Dockerfile for the extracted job scripts, builds a Docker image, and pushes it to Docker Hub.
 
-    The script uses Docker to run the job script within a Docker container.
+The Docker image is tagged with your specified image_name and tag.
 
-    The job-specific Docker image is pulled from Docker Hub and executed within the container.
+The script uses Docker to run the job script within a Docker container.
+
+The job-specific Docker image is pulled from Docker Hub and executed within the container.
 
 ## Customization
-    You can modify the script to handle different ZIP file structures or job execution requirements by adjusting the folder structure and job execution logic.
+You can modify the script to handle different ZIP file structures or job execution requirements by adjusting the folder structure and job execution logic.
 
-    Customize the Docker image by modifying the Dockerfile template within the script.
+Customize the Docker image by modifying the Dockerfile template within the script.
