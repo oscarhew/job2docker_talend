@@ -65,14 +65,16 @@ class NewFolderHandler(FileSystemEventHandler):
             
             # Define folder to store docker files
             jobDockerFiles = "C:\\Users\\Oscar\\Desktop\\listener\\job_dockers"
-            
+            shScriptFilesPath = f"/talend/{jobDetailsFolders}/{jobDetailsFolders}_run.sh"
+
             # Create a Dockerfile
             DockerFilePath = folder_to_convertDocker + "\\Dockerfile"
             with open(DockerFilePath, 'w') as dockerfile:
                 dockerfile.write(f"""
-                                 FROM openjdk:11-jre-slim
-                                 WORKDIR {folder_to_convertDocker}
-                                 CMD {shFilePath}
+                                 FROM openjdk:22-jdk-slim
+                                 WORKDIR /talend
+                                 COPY . /talend
+                                 CMD ["/bin/bash", "{shScriptFilesPath}"]
                                 """)
 
             print(f"Dockerfile created in {jobDockerFiles}")
