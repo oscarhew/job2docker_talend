@@ -17,7 +17,7 @@ Before using this script, make sure you have the following prerequisites:
 2. Install Python dependencies using pip:
 
    ```bash
-   pip install docker watchdog decouple
+   pip install -r requirements.txt
 
 3. Update the config.env file with your Docker Hub username and password.
 

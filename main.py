@@ -7,8 +7,8 @@ from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 
 # Define the folder to monitor
-folder_to_watch = "C:\\Users\\Oscar\\Desktop\\listener\\zipFile"
-folder_to_convertDocker = "C:\\Users\\Oscar\\Desktop\\listener\\jobsUnzipped"
+folder_to_watch = ".\\zipFile"
+folder_to_convertDocker = ".\\jobsUnzipped"
 
 # Docker Hub username, image name, and tag
 dockerhub_username = config('docker_username')
