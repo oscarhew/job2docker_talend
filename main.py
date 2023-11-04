@@ -6,9 +6,15 @@ from decouple import config
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 
+ROOT_DIR = os.path.dirname(
+    os.path.abspath(__file__)
+)
+
 # Define the folder to monitor
-folder_to_watch = ".\\zipFile"
-folder_to_convertDocker = ".\\jobsUnzipped"
+folder_to_watch = ROOT_DIR + "\\zipFile"
+folder_to_convertDocker = ROOT_DIR + "\\jobsUnziped"
+
+
 
 # Docker Hub username, image name, and tag
 dockerhub_username = config('docker_username')
@@ -45,6 +51,7 @@ class NewFolderHandler(FileSystemEventHandler):
             os.chdir(new_folder)
 
             # Use os.listdir() to get a list of all items in the directory.
+            print(new_folder)
             items = os.listdir(new_folder)
 
             # Filter the items to include only directories (folders).
@@ -53,6 +60,60 @@ class NewFolderHandler(FileSystemEventHandler):
             # Get into job folder to get the sh file to run the pipeline
             jobDetailsFolders = [folder for folder in folders if folder != 'lib']
             jobDetailsFolders = jobDetailsFolders[0]
+
+            ## Change to private server ip
+            settingFolders = jobDetailsFolders[1]
+            settingFolders = os.path.join(new_folder, jobDetailsFolders)
+            settingFolders = settingFolders + "\\items\\skyworld\\metadata\\connections\\DataWarehouse_0.1.item"
+
+            #open text file in read mode
+            config_file = open(settingFolders, "r")
+            
+            #read whole file to a string
+            data = config_file.read()
+            print(data)
+            data = data.replace("175.143.107.157", "192.168.102.164")
+            # Close file
+            config_file.close()
+
+            # Write content to file
+            config_file = open(settingFolders, "w")
+            n = config_file.write(data)
+
+            if n == len(data):
+                print("Success! String written to text file.")
+            else:
+                print("Failure! String not written to text file.")
+
+            # Close file
+            config_file.close()
+
+            ## Change to private server ip
+            settingFolders = jobDetailsFolders[1]
+            settingFolders = os.path.join(new_folder, jobDetailsFolders)
+            settingFolders = settingFolders + "\\items\\skyworld\\metadata\\connections\\dwteam_0.1.item"
+
+            #open text file in read mode
+            config_file = open(settingFolders, "r")
+            
+            #read whole file to a string
+            data = config_file.read()
+            print(data)
+            data = data.replace("175.143.107.157", "192.168.102.164")
+            # Close file
+            config_file.close()
+
+            # Write content to file
+            config_file = open(settingFolders, "w")
+            n = config_file.write(data)
+
+            if n == len(data):
+                print("Success! String written to text file.")
+            else:
+                print("Failure! String not written to text file.")
+
+            # Close file
+            config_file.close()
 
             # Get into script folder
             scriptFolderPath = os.path.join(new_folder, jobDetailsFolders)
@@ -64,7 +125,7 @@ class NewFolderHandler(FileSystemEventHandler):
             shFilePath = os.path.join(scriptFolderPath, shScriptFiles)
             
             # Define folder to store docker files
-            jobDockerFiles = "C:\\Users\\Oscar\\Desktop\\listener\\job_dockers"
+            jobDockerFiles = ROOT_DIR + "\\job_dockers"
             shScriptFilesPath = f"/talend/{jobDetailsFolders}/{jobDetailsFolders}_run.sh"
 
             # Create a Dockerfile
