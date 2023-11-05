@@ -1,7 +1,9 @@
 import os
+import io
 import time
 import docker
 import zipfile
+import fileinput
 from decouple import config
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
@@ -13,6 +15,8 @@ ROOT_DIR = os.path.dirname(
 # Define the folder to monitor
 folder_to_watch = ROOT_DIR + "\\zipFile"
 folder_to_convertDocker = ROOT_DIR + "\\jobsUnziped"
+folder_to_job =  ROOT_DIR + "\\jobsUnziped\\star_main"
+path_to_temp = ROOT_DIR + "\\temp\\skyworld"
 
 
 
@@ -21,6 +25,29 @@ dockerhub_username = config('docker_username')
 image_name = "dw_main"
 tag = "latest"  # Replace with the desired tag
 password = config('docker_pw')
+
+# Function to change ip to private ip
+def changeIP(folderPath):
+    #open text file in read mode
+    config_file = open(folderPath, "r")
+    
+    #read whole file to a string
+    data = config_file.read()
+    data = data.replace("175.143.107.157", "192.168.102.164")
+    # Close file
+    config_file.close()
+
+    # Write content to file
+    config_file = open(folderPath, "w")
+    n = config_file.write(data)
+
+    if n == len(data):
+        print("Success! String written to text file.")
+    else:
+        print("Failure! String not written to text file.")
+
+    # Close file
+    config_file.close()
 
 # Define jobs 
 
@@ -46,6 +73,13 @@ class NewFolderHandler(FileSystemEventHandler):
                 zip_ref.extractall(extraction_path)
             print(f'Zip file unzipped successfully in {extraction_path}')
 
+            # Delete zip file
+            try:
+                os.remove(zip_file_path)
+                print(f"File '{zip_file_path}' has been successfully deleted.")
+            except OSError as e:
+                print(f"Error: {e}")
+
             # Go into the new folder
             new_folder = extraction_path
             os.chdir(new_folder)
@@ -60,60 +94,6 @@ class NewFolderHandler(FileSystemEventHandler):
             # Get into job folder to get the sh file to run the pipeline
             jobDetailsFolders = [folder for folder in folders if folder != 'lib']
             jobDetailsFolders = jobDetailsFolders[0]
-
-            ## Change to private server ip
-            settingFolders = jobDetailsFolders[1]
-            settingFolders = os.path.join(new_folder, jobDetailsFolders)
-            settingFolders = settingFolders + "\\items\\skyworld\\metadata\\connections\\DataWarehouse_0.1.item"
-
-            #open text file in read mode
-            config_file = open(settingFolders, "r")
-            
-            #read whole file to a string
-            data = config_file.read()
-            print(data)
-            data = data.replace("175.143.107.157", "192.168.102.164")
-            # Close file
-            config_file.close()
-
-            # Write content to file
-            config_file = open(settingFolders, "w")
-            n = config_file.write(data)
-
-            if n == len(data):
-                print("Success! String written to text file.")
-            else:
-                print("Failure! String not written to text file.")
-
-            # Close file
-            config_file.close()
-
-            ## Change to private server ip
-            settingFolders = jobDetailsFolders[1]
-            settingFolders = os.path.join(new_folder, jobDetailsFolders)
-            settingFolders = settingFolders + "\\items\\skyworld\\metadata\\connections\\dwteam_0.1.item"
-
-            #open text file in read mode
-            config_file = open(settingFolders, "r")
-            
-            #read whole file to a string
-            data = config_file.read()
-            print(data)
-            data = data.replace("175.143.107.157", "192.168.102.164")
-            # Close file
-            config_file.close()
-
-            # Write content to file
-            config_file = open(settingFolders, "w")
-            n = config_file.write(data)
-
-            if n == len(data):
-                print("Success! String written to text file.")
-            else:
-                print("Failure! String not written to text file.")
-
-            # Close file
-            config_file.close()
 
             # Get into script folder
             scriptFolderPath = os.path.join(new_folder, jobDetailsFolders)
