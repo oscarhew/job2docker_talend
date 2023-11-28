@@ -1,9 +1,7 @@
 import os
-import io
 import time
 import docker
 import zipfile
-import fileinput
 from decouple import config
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
@@ -26,6 +24,10 @@ image_name = "dw_main"
 tag = "latest"  # Replace with the desired tag
 password = config('docker_pw')
 
+# IP Config
+public_ip = config('public_ip')
+private_ip = config('private_ip')
+
 # Function to change ip to private ip
 def changeIP(folderPath):
     #open text file in read mode
@@ -33,7 +35,7 @@ def changeIP(folderPath):
     
     #read whole file to a string
     data = config_file.read()
-    data = data.replace("175.143.107.157", "192.168.102.164")
+    data = data.replace(public_ip, private_ip)
     # Close file
     config_file.close()
 
