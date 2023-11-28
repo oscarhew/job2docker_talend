@@ -1,4 +1,4 @@
 .env
-jobsUnziped/*
-zipFile/*
+jobsUnziped/
+zipFile/
 test.py
