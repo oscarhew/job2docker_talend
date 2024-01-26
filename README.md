@@ -10,6 +10,9 @@ Before using this script, make sure you have the following prerequisites:
 - **Docker:** You need Docker installed, as this script builds and pushes Docker containers to execute job scripts.
 - **Docker Hub Account:** You should have a Docker Hub account to push Docker images.
 
+## IP Address
+Be careful of ip address, there are public and private IP Address, make sure your talend job using the correct ip before push to the docker, for here we need to use private ip if you prefer to deploy your docker in interval server.
+
 ## Getting Started
 
 1. Clone or download this repository to your local machine.

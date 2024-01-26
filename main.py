@@ -28,28 +28,29 @@ password = config('docker_pw')
 public_ip = config('public_ip')
 private_ip = config('private_ip')
 
-# Function to change ip to private ip
-def changeIP(folderPath):
-    #open text file in read mode
-    config_file = open(folderPath, "r")
+# # Function to change ip to private ip
+# It's a failed function. For now, we can just change the ip address to private/public in Talend Database Metadata
+# def changeIP(folderPath):
+#     #open text file in read mode
+#     config_file = open(folderPath, "r")
     
-    #read whole file to a string
-    data = config_file.read()
-    data = data.replace(public_ip, private_ip)
-    # Close file
-    config_file.close()
+#     #read whole file to a string
+#     data = config_file.read()
+#     data = data.replace(public_ip, private_ip)
+#     # Close file
+#     config_file.close()
 
-    # Write content to file
-    config_file = open(folderPath, "w")
-    n = config_file.write(data)
+#     # Write content to file
+#     config_file = open(folderPath, "w")
+#     n = config_file.write(data)
 
-    if n == len(data):
-        print("Success! String written to text file.")
-    else:
-        print("Failure! String not written to text file.")
+#     if n == len(data):
+#         print("Success! String written to text file.")
+#     else:
+#         print("Failure! String not written to text file.")
 
-    # Close file
-    config_file.close()
+#     # Close file
+#     config_file.close()
 
 # Define jobs 
 
@@ -125,28 +126,37 @@ class NewFolderHandler(FileSystemEventHandler):
             time.sleep(5)
 
             # Push DockerFile
-            # Initialize the Docker client
-            client = docker.from_env()
+            pushDocker(True)
 
-            # Build the Docker image
-            image, build_logs = client.images.build(
-                path=folder_to_convertDocker,
-                tag=f"{dockerhub_username}/{image_name}:{tag}",
-                rm=True,  # Remove intermediate containers
-            )
+def pushDocker(*args):
+    check = args[0]
 
-            # Push the Docker image to Docker Hub
-            for log in build_logs:
-                if "stream" in log:
-                    print(log["stream"], end="")
+    if check is True:
+        # Initialize the Docker client
+        client = docker.from_env()
 
-            # Log in to Docker Hub
-            client.login(username=dockerhub_username, password=password)
+        # Build the Docker image
+        image, build_logs = client.images.build(
+            path=folder_to_convertDocker,
+            tag=f"{dockerhub_username}/{image_name}:{tag}",
+            rm=True,  # Remove intermediate containers
+        )
+        print('Building image...')
 
-            # Push the image to Docker Hub
-            client.images.push(f"{dockerhub_username}/{image_name}", tag=tag)
+        # Push the Docker image to Docker Hub
+        for log in build_logs:
+            if "stream" in log:
+                print(log["stream"], end="")
 
-            print("Image pushed to Docker Hub")
+        # Log in to Docker Hub
+        client.login(username=dockerhub_username, password=password)
+
+        # Push the image to Docker Hub
+        client.images.push(f"{dockerhub_username}/{image_name}", tag=tag)
+    else:
+        time.sleep(5)
+
+    print("Image pushed to Docker Hub")
             
 # Init and setting up observer
 if __name__ == "__main__":
